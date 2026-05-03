@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Админка</title>
+<style>
+body { font-family: Arial; padding:20px }
+.card { border:1px solid #ccc; padding:10px; margin:10px 0 }
+button { margin:5px }
+</style>
+</head>
+<body>
+
+<h1>Админ панель</h1>
+
+<input type="password" id="pass" placeholder="Пароль">
+<button onclick="login()">Войти</button>
+
+<div id="admin" style="display:none">
+
+<h2>Группы</h2>
+<div id="groups"></div>
+
+<input id="newGroup" placeholder="Название группы">
+<button onclick="addGroup()">Добавить группу</button>
+
+<br><br>
+<button onclick="save()">💾 Сохранить</button>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
