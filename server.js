@@ -12,23 +12,62 @@ app.use(express.static('public'));
 const PASSWORD = "1234";
 
 const ScheduleSchema = new mongoose.Schema({
-    data: Object
+
+    data: {
+        type: Object,
+        default: {}
+    }
+
 });
 
 const Schedule = mongoose.model('Schedule', ScheduleSchema);
 
 app.get('/api/schedule', async (req, res) => {
 
-    let schedule = await Schedule.findOne();
+    try {
 
-    if (!schedule) {
-        schedule = await Schedule.create({
-            data: {}
+        let schedule = await Schedule.findOne();
+
+        // Если базы ещё нет
+        if (!schedule) {
+
+            schedule = await Schedule.create({
+                data: {}
+            });
+
+        }
+
+        // Если data почему-то undefined
+        if (!schedule.data) {
+            schedule.data = {};
+        }
+
+        res.json(schedule.data);
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            error: 'Ошибка сервера'
         });
+
     }
 
-    res.json(schedule.data);
 });
+
+// app.get('/api/schedule', async (req, res) => {
+
+//     let schedule = await Schedule.findOne();
+
+//     if (!schedule) {
+//         schedule = await Schedule.create({
+//             data: {}
+//         });
+//     }
+
+//     res.json(schedule.data);
+// });
 
 app.post('/api/schedule', async (req, res) => {
 
