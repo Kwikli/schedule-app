@@ -21,39 +21,40 @@ const ScheduleSchema = new mongoose.Schema({
 });
 
 const Schedule = mongoose.model('Schedule', ScheduleSchema);
+const days = [
+    "Понедельник",
+    "Вторник",
+    "Среда",
+    "Четверг",
+    "Пятница",
+    "Суббота",
+    "Воскресенье"
+];
 
 app.get('/api/schedule', async (req, res) => {
 
-    try {
+    let schedule = await Schedule.findOne();
 
-        let schedule = await Schedule.findOne();
-
-        // Если базы ещё нет
-        if (!schedule) {
-
-            schedule = await Schedule.create({
-                data: {}
-            });
-
-        }
-
-        // Если data почему-то undefined
-        if (!schedule.data) {
-            schedule.data = {};
-        }
-
-        res.json(schedule.data);
-
-    } catch (error) {
-
-        console.log(error);
-
-        res.status(500).json({
-            error: 'Ошибка сервера'
-        });
-
+    if (!schedule) {
+        schedule = await Schedule.create({ data: {} });
     }
 
+    let data = schedule.data || {};
+
+    // 🔥 создаём структуру дней для каждой группы
+    for (let group in data) {
+        if (!data[group] || typeof data[group] !== 'object' || Array.isArray(data[group])) {
+            data[group] = {};
+        }
+
+        days.forEach(day => {
+            if (!data[group][day]) {
+                data[group][day] = [];
+            }
+        });
+    }
+
+    res.json(data);
 });
 
 // app.get('/api/schedule', async (req, res) => {

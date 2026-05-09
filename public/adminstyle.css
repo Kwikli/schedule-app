@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1{
+    padding: 25px;
+    background-color: #073b7b;
+    box-shadow: 0px 7px 11px 2px rgb(26 12 12 / 48%);
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background: #96a9d6;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    padding: 0px;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* 📱 Основной контейнер */
+.container {
+    width: 100%;
+    max-width: 900px;
+}
+
+#schedule {
+    display: flex;
+    justify-content: space-between;
+}
+
+#schedule, #groups{
+    margin: 15px;
+} 
+
+/* 🧩 Заголовок */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* 🔽 select */
+select {
+    padding: 12px;
+    border-radius: 12px;
+    outline: none;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background: #1e293b;
+    color: white;
+}
+
+/* 📦 Карточка расписания */
+.card {
+    width: 100%;
+    margin: 10px;
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* 📅 День недели */
+.day-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #60a5fa;
+}
+
+/* 📚 Пара */
+.lesson {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    background: #0f172a;
+    margin-bottom: 8px;
+    transition: 0.2s;
+}
+
+.lesson:hover {
+    transform: scale(1.02);
+    background: #111c36;
+}
+
+/* ⏰ время */
+.time {
+    color: #94a3b8;
+}
+
+/* 📚 предмет */
+.subject {
+    font-weight: 600;
+}
+
+/* 💡 пусто */
+.empty {
+    color: #64748b;
+    font-size: 14px;
+}

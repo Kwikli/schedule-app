@@ -1,10 +1,6 @@
 let data = {};
 let password = "";
 
-// ======================
-// 🔐 Вход в админку
-// ======================
-
 async function login() {
 
     password = document.getElementById('pass').value;
@@ -33,109 +29,85 @@ async function login() {
     }
 }
 
-// ======================
-// 🎨 Отрисовка интерфейса
-// ======================
-
 function render() {
 
     const container = document.getElementById('groups');
-
     container.innerHTML = '';
 
-    // Проходим по всем группам
-    for (let groupName in data) {
+    for (let group in data) {
 
-        const groupCard = document.createElement('div');
+        const card = document.createElement('div');
+        card.className = 'card';
 
-        groupCard.className = 'card';
+        card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>${group}</h2>
 
-        // Верхняя часть карточки
-        groupCard.innerHTML = `
-            <div class="group-header">
-                <h3>${groupName}</h3>
-
-                <div>
-                    <button onclick="addLesson('${groupName}')">
-                        ➕ Добавить пару
-                    </button>
-
-                    <button onclick="deleteGroup('${groupName}')">
-                        ❌ Удалить группу
-                    </button>
-                </div>
+        <button 
+            onclick="deleteGroup('${group}')"
+            style="
+                background:red;
+                color:white;
+                border:none;
+                padding:6px 10px;
+                border-radius:6px;
+                cursor:pointer;
+            "
+                >
+                    🗑 Удалить
+                </button>
             </div>
         `;
 
-        // Занятия
-        data[groupName].forEach((lesson, index) => {
+        for (let day in data[group]) {
 
-            const lessonDiv = document.createElement('div');
-
-            lessonDiv.className = 'lesson';
-
-            lessonDiv.innerHTML = `
-                <input 
-                    value="${lesson.day || ''}" 
-                    placeholder="День"
-                    onchange="editLesson('${groupName}', ${index}, 'day', this.value)"
-                >
-
-                <input 
-                    value="${lesson.time || ''}" 
-                    placeholder="Время"
-                    onchange="editLesson('${groupName}', ${index}, 'time', this.value)"
-                >
-
-                <input 
-                    value="${lesson.subject || ''}" 
-                    placeholder="Предмет"
-                    onchange="editLesson('${groupName}', ${index}, 'subject', this.value)"
-                >
-
-                <button onclick="deleteLesson('${groupName}', ${index})">
-                    🗑
-                </button>
+            const dayBlock = document.createElement('div');
+            dayBlock.innerHTML = `<h3>${day}</h3>
+                <button onclick="addLesson('${group}', '${day}')">+ Пара</button>
             `;
 
-            groupCard.appendChild(lessonDiv);
+            data[group][day].forEach((lesson, i) => {
 
-        });
+                const lessonDiv = document.createElement('div');
 
-        container.appendChild(groupCard);
+                lessonDiv.innerHTML = `
+                    <input value="${lesson.time}" placeholder="Время"
+                        onchange="data['${group}']['${day}'][${i}].time=this.value">
+
+                    <input value="${lesson.subject}" placeholder="Предмет"
+                        onchange="data['${group}']['${day}'][${i}].subject=this.value">
+
+                    <button onclick="deleteLesson('${group}','${day}',${i})">❌</button>
+                `;
+
+                dayBlock.appendChild(lessonDiv);
+            });
+
+            card.appendChild(dayBlock);
+        }
+
+        container.appendChild(card);
     }
 }
-
-// ======================
-// ➕ Добавить группу
-// ======================
 
 function addGroup() {
 
-    const input = document.getElementById('newGroup');
+    const name = document.getElementById('newGroup').value;
 
-    const groupName = input.value.trim();
+    if (!name) return;
 
-    if (!groupName) {
-        alert('Введите название группы');
-        return;
-    }
-
-    if (data[groupName]) {
-        alert('Такая группа уже существует');
-        return;
-    }
-
-    data[groupName] = [];
-
-    input.value = '';
+    data[name] = {
+        "Понедельник": [],
+        "Вторник": [],
+        "Среда": [],
+        "Четверг": [],
+        "Пятница": [],
+        "Суббота": [],
+        "Воскресенье": []
+    };
 
     render();
 }
-
-// ======================
-// ❌ Удалить группу
-// ======================
 
 function deleteGroup(groupName) {
 
@@ -150,44 +122,27 @@ function deleteGroup(groupName) {
     render();
 }
 
-// ======================
-// ➕ Добавить занятие
-// ======================
+function addLesson(groupName, day) {
 
-function addLesson(groupName) {
-
-    data[groupName].push({
-        day: '',
-        time: '',
-        subject: ''
+    data[groupName][day].push({
+        time: "",
+        subject: ""
     });
 
     render();
 }
 
-// ======================
-// 🗑 Удалить занятие
-// ======================
+function deleteLesson(groupName, day, index) {
 
-function deleteLesson(groupName, index) {
-
-    data[groupName].splice(index, 1);
+    data[groupName][day].splice(index, 1);
 
     render();
 }
-
-// ======================
-// ✏️ Редактирование
-// ======================
 
 function editLesson(groupName, index, field, value) {
 
     data[groupName][index][field] = value;
 }
-
-// ======================
-// 💾 Сохранение
-// ======================
 
 async function save() {
 
